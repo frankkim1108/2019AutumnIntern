@@ -17,7 +17,6 @@ import sys
 # from venv import functions
 
 
-
 def findPointArr(read_dir, fileName):
     with open(read_dir + fileName, 'r') as f:
         json_data = json.load(f)
@@ -37,14 +36,21 @@ def findPointArr(read_dir, fileName):
     del points[0]
     return points
 
-def main(frontimage, sideimage):
+# passing two variables to main fuction
 
-    # newfrontImg = cv2.imread('image/newestfront.jpg')
-    newfrontImg = frontimage;
+def main(frontimage, sideimage, height):
+    # side/newimage.png
+    print ("starting main")
+    frontImgPath = './front_data/' + frontimage
+    newfrontImg = cv2.imread(frontImgPath)
     finalfront.getfrontcoord(newfrontImg)
-    # newsideImg = cv2.imread('image/newestside.jpg')
-    newsideImg = sideimage
+
+    print ("front picture coordinate received")
+    sideImgPath = './side_data/' + sideimage
+    newsideImg = cv2.imread(sideImgPath)
     finalside.getfrontcoord(newsideImg)
+
+    print ("side picture coordinates received")
     read_dir = './json/'
     frontJson = 'finalfront.json'  # json file of front picture analysis
     sideJson = 'finalside.json'  # json file of front picture analysis
@@ -72,7 +78,7 @@ def main(frontimage, sideimage):
     (sideBottomMost, sideTopMost) = functions.findExtremePoints(sideContour, sideImgHeight)
 
     # calculate 1pixel : 1cm ratio
-    human_height = 165  # this value is random number, it must be input by user
+    human_height = height  # this value is random number, it must be input by user
     rate = functions.pixelHeightCal(human_height, frontTopMost, frontBottomMost)
 
     frontImg = functions.addGreen(frontImg)
@@ -82,8 +88,8 @@ def main(frontimage, sideimage):
     cv2.drawContours(sideImg, sideContour, -1, (0, 255, 0), 1)
     im = cv2.resize(frontImg, (800, 1000))
     im2 = cv2.resize(sideImg, (800, 1000))
-    cv2.imshow("checking_front", im)
-    cv2.imshow("chekcing_side", im2)
+    # cv2.imshow("front", im)
+    # cv2.imshow("side", im2)
     # cv2.waitKey(0)
     # point Number information
     # point0 = NOSE                 point1 = CHEST
@@ -133,5 +139,6 @@ def main(frontimage, sideimage):
 
     print(json.dumps(sizeGroup) )
 
+# passing two files from php file to python main file
 
-main(sys.argv[1], sys.argv[2])
+main(sys.argv[1], sys.argv[2], sys.argv[3])
